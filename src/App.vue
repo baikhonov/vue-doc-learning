@@ -1,107 +1,173 @@
-<!-- Options API START -->
+<!-- Устаревший способ объявлять реактивные переменные -->
 <!-- <script>
+import { ref } from "vue";
+
 export default {
-  data() {
-    // Properties returned from data() become reactive state
-    // and will be exposed on `this`
+  setup() {
+    const count = ref(0);
+
     return {
-      count: 0,
+      count,
     };
-  },
-
-  // Methods are functions that mutate state and trigger updates.
-  // They can be found as event handlers in templates
-  methods: {
-    increment() {
-      this.count++;
-    },
-  },
-
-  // Lifecycle hooks are called at different stages
-  // of a component's lifecycle.
-  // This function will be called when the component is mounted/
-  mounted() {
-    console.log(`The initial count is ${this.count}.`);
   },
 };
 </script> -->
-<!-- Options API END -->
 
-<!-- Composition API START -->
+<!-- Cовременный способ -->
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, reactive } from "vue";
 
-// reactive state
-const count = ref(0);
-const rawHtml = "<b>Жирный текст</b>";
-const dynamicId = ref(2);
-const id = ref(5);
-const isButtonDisabled = ref(true);
-const seen = ref(true);
-const url = ref("https://google.com");
-const someDynamicExpression = "href";
-const someDynamicEvent = "click";
+// const count = ref(0);
+// const state = reactive({
+//   count,
+// });
 
-const objectOFAttrs = {
-  id: "container",
-  class: "wrapper",
-  style: "background-color: orange",
-};
+// console.log(state.count); // 0
 
-// functions that mutate state and trigger updates
-function increment() {
-  count.value++;
-  dynamicId.value++;
-}
+// state.count = 1;
+// console.log(count.value); // 1
 
-function doSomething() {
-  console.log("Ты кликнул по кнопке");
-}
+// console.log("------------------");
+// const otherCount = ref(2);
 
-function obSubmit() {
-  console.log("Отправили данные формы");
-}
+// state.count = otherCount;
+// console.log(state.count); // 2
+// // старая ref-ссылка теперь не влияет на state.count
+// console.log(count.value); // 1
 
-onMounted(() => {
-  // console.log(`The initial count is ${count.value}.`);
-});
+// const count = ref(0);
+// const state = reactive({
+//   count,
+// });
+
+// console.log(state.count);
+// state.count = 1;
+// console.log(count.value);
+
+// const otherCount = ref(2);
+
+// state.count = otherCount;
+// console.log(state.count);
+// console.log(count.value);
+
+const books = reactive([ref("Vue 3 Guide")]);
+console.log(books[0].value);
+
+const map = reactive(new Map([["count", ref(0)]]));
+console.log(map.get("count").value);
 </script>
-<!-- Composition API END -->
 
 <template>
-  <button @click="increment">Count is: {{ count }}</button>
-  <p>Using text interpolation: {{ rawHtml }}</p>
-  <p>Using v-html directive: <span v-html="rawHtml"></span></p>
-  <!-- Attribute Bindings -->
-  <!-- <div v-bind:id="dynamicId"></div> -->
-  <!-- Shorthand variant of v-bind -->
-  <div :id="dynamicId">Просто div</div>
-  <!-- Same-name Shorthand -->
-  <!-- Тоже самое что :id="id" -->
-  <!-- Или v-bind:id -->
-  <!-- this is a feature that is only available in Vue 3.4 and above -->
-  <div :id>А это div с одноимённым аттрибутом</div>
-  <!-- Boolean Attributes -->
-  <button :disabled="isButtonDisabled">Button</button>
-  <div v-bind="objectOFAttrs">div для демонстрации применения объекта с аттрибутами</div>
-  <p v-if="seen">Now you see me</p>
-  <a v-bind:href="url" target="_blank">Google</a>
-  <p></p>
-  <!-- <button v-on:click="doSomething">Click me</button> -->
-  <!-- Сокращённый вариант v-on - @ -->
-  <button @click="doSomething">Click me</button>
-  <p></p>
-  <!-- Dynamic Arguments -->
-  <!-- <a v-bind:[someDynamicExpression]="url" target="_blank">Ещё одна ссылка</a> -->
-  <!-- Или сокращённый вариант -->
-  <a :[someDynamicExpression]="url" target="_blank">Ещё одна ссылка</a>
-  <p></p>
-  <!-- <button v-on:[someDynamicEvent]="doSomething">Click me</button> -->
-  <!-- Сокращённый вариант v-on - @ -->
-  <button @[someDynamicEvent]="doSomething">Click Me Again</button>
-  <p></p>
-  <form @submit.prevent="obSubmit">
-    <input type="text" name="name" placeholder="Имя" />
-    <button type="submit">Send</button>
-  </form>
+  <div></div>
 </template>
+
+<style scoped>
+/* Базовые стили для элементов формы */
+button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  background: #3b82f6;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btns {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Вариации кнопок */
+.btn-secondary {
+  background: #6b7280;
+}
+
+.btn-secondary:hover {
+  background: #4b5563;
+}
+
+.btn-success {
+  background: #10b981;
+}
+
+.btn-success:hover {
+  background: #059669;
+}
+
+.btn-danger {
+  background: #ef4444;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+}
+
+/* Поля ввода */
+input,
+select,
+textarea {
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+/* Карточки */
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f3f4f6;
+}
+
+/* Контейнеры */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Утилиты */
+.text-center {
+  text-align: center;
+}
+.mt-4 {
+  margin-top: 24px;
+}
+.mb-4 {
+  margin-bottom: 24px;
+}
+.p-4 {
+  padding: 24px;
+}
+</style>
