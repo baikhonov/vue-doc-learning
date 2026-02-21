@@ -1,34 +1,47 @@
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, computed } from 'vue';
 
-const awesome = ref(true);
-const type = ref('D');
-const always = ref(true);
-const ok = ref(false);
+const items = ref([
+  { id: 1, message: 'Hello Foo world' },
+  { id: 2, message: 'Bar and baz' },
+  { id: 3, message: 'Foo is great' },
+  { id: 4, message: 'No match here' },
+  { id: 5, message: 'foo (lowercase)' },
+  { id: 6, message: 'Football' },
+  { id: 7, message: 'Something Foo something' },
+  { id: 8, message: 'Just text' },
+]);
+
+const showFiltered = ref(false);
+
+const displayedItems = computed(() => {
+  if (showFiltered.value) {
+    return items.value.filter((item) => item.message.match(/Foo/));
+  }
+  return items.value;
+});
+
+function filterItems() {
+  showFiltered.value = true;
+}
+
+function resetFilter() {
+  showFiltered.value = false;
+}
 </script>
 
 <template>
   <div>
-    <button @click="awesome = !awesome">Переключить</button>
-    <h1 v-if="awesome">Vue прекрасен! ❤️</h1>
-    <h1 v-else>Vue ужасен! 😢</h1>
+    <p>Количество элементов: {{ displayedItems.length }}</p>
+    <ul>
+      <li v-for="item in displayedItems" :key="item.id">
+        {{ item.message }}
+      </li>
+    </ul>
 
-    <div v-if="type === 'A'">A</div>
-    <div v-else-if="type === 'B'">B</div>
-    <div v-else-if="type === 'C'">C</div>
-    <div v-else>Точно не A, B или C</div>
-
-    <template v-if="always">
-      <h2>Несколько фактов о Сабине:</h2>
-      <ul>
-        <li>любит красные розы</li>
-        <li>размер футболки 44, но хочет 52</li>
-        <li>обожает косметику</li>
-      </ul>
-    </template>
-
-    <h1 v-show="ok">Привет!</h1>
+    <button @click="filterItems">Показать только с Foo</button>
+    <button @click="resetFilter" style="margin-left: 10px">
+      Сбросить фильтр
+    </button>
   </div>
 </template>
-
-<style scoped></style>
